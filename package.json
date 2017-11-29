@@ -1,0 +1,27 @@
+{
+  "name": "my-awesome-package",
+  "version": "1.0.0",
+  "description": "for week 6 homework",
+  "main": "index.js",
+  "dependencies": {
+    "node-spotify-api": "^1.0.7",
+    "request": "^2.83.0",
+    "twitter": "^1.7.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git-repository-unknown"
+  },
+  "keywords": [
+    "liri",
+    "spotify",
+    "twitter",
+    "omdbapi"
+  ],
+  "author": "Patrick Hayes",
+  "license": "ISC"
+}
