@@ -5,10 +5,7 @@ twitter, omdb, spotify talking to node application
 Instructions -
 to get last 20 tweets from KdurantAlias: node liri.js my-tweets
     This is a spoof account. Keys for this account are included for ease of use.
-    if you wanted to make this a personal app, you just have to replace the keys
-    if you wanted to then share that app but not have people see your keys you could us the keys.js file
-        load the keys into liri. then use them but not store them on your open repositories.
-        the line to load said keys has been commented out in line 1 of liri.js
+    if you wanted to make this a personal app, you just have to replace the keys in the keys.js file
             you will still have to overwrite with your own in the tweet function (line 84-87)
 
 to get movie information: node liri.js movie-this <your> <movie> <title> <here>

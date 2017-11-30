@@ -1,4 +1,4 @@
-//var tweetkeys = require("./keys.js");//not keys we care about
+var tweetkeys = require("./keys.js"); //not keys we care about
 var operand = process.argv[2];
 var action = ''
 if (process.argv.length > 3) {
@@ -81,10 +81,10 @@ function tweet() {
     var Twitter = require('twitter');
 
     var client = new Twitter({ //dont care about people seeing these as the account is a spoof
-        consumer_key: 'hEVuNfA95bdIl0p6IObSqsbwJ',
-        consumer_secret: 'egkIo10KGtBM867zmEG1rDlRMagJgqZmNNqewI5Okrhg932JZW',
-        access_token_key: '935586317970354178-VLPKlsl2GWlkmqX6mKi1NsGw1Re5Bn2',
-        access_token_secret: 'HNA0DK9i9I4Switgq4jUIMAi222tJLhgC7fcd3NYjT1Hn'
+        consumer_key: tweetkeys.consumer_key,
+        consumer_secret: tweetkeys.consumer_secret,
+        access_token_key: tweetkeys.access_token_key,
+        access_token_secret: tweetkeys.access_token_secret
     });
 
     var params = { screen_name: 'KdurantAlias' }; //go to spoof account
