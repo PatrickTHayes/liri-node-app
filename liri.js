@@ -132,11 +132,10 @@ function doIt() {
         if (error) {
             return console.log(error);
         }
-        // Then split it by commas (to make it more readable)
         var dataArr = data.split(",");
-
-        // We will then re-display the content as an array for later use.
-        //console.log(dataArr);
-        runCase(dataArr[0], dataArr[1]);
+        var movieOption = dataArr[1];
+        movieOption = movieOption.split(' ') // set up to match input type, needs to enter as an array.
+        //console.log(movieOption);
+        runCase(dataArr[0], dataArr[1], movieOption);
     });
 }
