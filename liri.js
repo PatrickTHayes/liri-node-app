@@ -1,14 +1,13 @@
-var tweetkeys = require("./keys.js"); //not keys we care about
-var operand = process.argv[2];
-var action = ''
-if (process.argv.length > 3) {
+var tweetkeys = require("./keys.js"); //load keys from external file.
+var operand = process.argv[2]; // set input operator
+var action = '' //give empty string
+if (process.argv.length > 3) { //check for user input
     action = process.argv[3];
 }
 var inputArray = process.argv;
 runCase(operand, action, inputArray);
-//console.log(process.argv.length);
-function runCase(operand, action, inputArray) {
-    //console.log(operand + ' ' + action);
+
+function runCase(operand, action, inputArray) { //function controll on inputs
     switch (operand) {
         case 'movie-this':
             movie(inputArray);
@@ -23,26 +22,17 @@ function runCase(operand, action, inputArray) {
             doIt();
             break;
 
-        default:
-            // code
     }
 }
 
 function movie(inputArray) {
     var request = require("request");
-    //console.log(inputArray.length);
 
-    // Store all of the arguments in an array
-    //var nodeArgs = process.argv;
-
-    // Create an empty variable for holding the movie name
     var movieName = "";
 
-    // Loop through all the words in the node argument
-    // And do a little for-loop magic to handle the inclusion of "+"s
-    for (var i = 3; i < inputArray.length; i++) {
+    for (var i = 3; i < inputArray.length; i++) { //look into array at index 2 if exists and loop onward
 
-        if (i > 2 && i < inputArray.length) {
+        if (i > 2 && i < inputArray.length) { // form query of movie
 
             movieName = movieName + "+" + inputArray[i];
 
@@ -51,36 +41,35 @@ function movie(inputArray) {
 
     if (inputArray.length === 3) { //use mr. nobody if they dont pass any parameters past movie-this
 
-        movieName = 'Mr.+Nobody';
+        movieName = 'Mr. Nobody';
 
     }
+    movieName = movieName.replace(' ', '+'); //logic handles spaces in case the input is in quotes
 
-    // Then run a request to the OMDB API with the movie specified
+
     var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
     //console.log(queryUrl)
     request(queryUrl, function(error, response, body) {
-        // If the request is successful
-        //console.log(JSON.stringify(body, null, 2)); //display body to make finding data easier.
         if (!error && response.statusCode === 200) {
 
-            // Parse the body of the site and recover just the imdbRating
-            // (Note: The syntax below for parsing isn't obvious. Just spend a few moments dissecting it).
-            console.log("Movie Title: " + JSON.parse(body).Title);
-            console.log("Release Year: " + JSON.parse(body).Year);
-            console.log("Imdb rating : " + JSON.parse(body).imdbRating);
-            console.log("Rotten tomato rating : " + JSON.parse(body).Ratings[1].Value); //not working here
-            console.log("Produced in: " + JSON.parse(body).Country);
-            console.log("Language: " + JSON.parse(body).Language);
-            console.log("Actors: " + JSON.parse(body).Actors);
-            console.log("Plot: " + JSON.parse(body).Plot);
+            log("Movie Title: " + JSON.parse(body).Title);
+            log("Release Year: " + JSON.parse(body).Year);
+            log("Imdb rating : " + JSON.parse(body).imdbRating);
+            if (JSON.parse(body).Ratings[1]) {
+                log("Rotten tomato rating : " + JSON.parse(body).Ratings[1].Value); //deals with the case that Rotten tomatoes doesn't have a score
+            }
+            log("Produced in: " + JSON.parse(body).Country);
+            log("Language: " + JSON.parse(body).Language);
+            log("Actors: " + JSON.parse(body).Actors);
+            log("Plot: " + JSON.parse(body).Plot);
         }
     });
 }
 
 function tweet() {
-    var Twitter = require('twitter');
+    var Twitter = require('twitter'); //get twitter npm
 
-    var client = new Twitter({ //dont care about people seeing these as the account is a spoof
+    var client = new Twitter({ //dont care about people seeing these as the account is a spoof but import is added
         consumer_key: tweetkeys.consumer_key,
         consumer_secret: tweetkeys.consumer_secret,
         access_token_key: tweetkeys.access_token_key,
@@ -91,41 +80,40 @@ function tweet() {
     client.get('statuses/user_timeline', params, function(error, tweets, response) {
         if (error) throw error; //check for error
         for (var i = 0; i < 20; i++) { //loop through 20 most recent, log date and tweet content
-            console.log(tweets[i].created_at + "  KdurantAlias tweeted: '" + tweets[i].text + "'");
-            console.log('------------------');
+            log(tweets[i].created_at + "  KdurantAlias tweeted: '" + tweets[i].text + "'");
         }
     });
 }
 
 function spot(test) {
-    var Spotify = require('node-spotify-api');
+    var Spotify = require('node-spotify-api'); //get spotify npm
 
-    var spotify = new Spotify({
+    var spotify = new Spotify({ //add personal keys
         id: '8bede0e9353e44018e0c66ec554e5fa9',
         secret: '9709ad4f737c4610b90fd4f4b6fbece4'
     });
-    if (test === '') {
+    if (test === '') { //check for empty input, if so assign ace of bass song
         test = 'the sign Ace';
     }
     spotify
         .search({ type: 'track', query: test })
-        .then(function(response) {
-            console.log("artist list :")
+        .then(function(response) { //find and log relevant data from JSON object
+            log("artist list :")
             for (var i = 0; i < response.tracks.items[0].artists.length; i++) { //loop for multiple artists
-                console.log((i + 1) + ": " + response.tracks.items[0].artists[i].name);
+                log((i + 1) + ": " + response.tracks.items[0].artists[i].name);
             }
-            console.log('Song Name: ' + response.tracks.items[0].name);
-            console.log('Preview url (null if not available): ' + response.tracks.items[0].preview_url);
-            console.log('Album name: ' + response.tracks.items[0].album.name);
+            log('Song Name: ' + response.tracks.items[0].name);
+            log('Preview url (null if not available): ' + response.tracks.items[0].preview_url);
+            log('Album name: ' + response.tracks.items[0].album.name);
         })
         .catch(function(err) {
             console.log(err);
         });
 }
+var fs = require("fs"); // get filesystem up and running
 
 function doIt() {
-    var fs = require("fs");
-
+    var fs = require("fs"); //shouldn't need this because of line 128 but cloud 9 was not happy without it.
     fs.readFile("random.txt", "utf8", function(error, data) {
 
         // If the code experiences any errors it will log the error to the console.
@@ -133,9 +121,19 @@ function doIt() {
             return console.log(error);
         }
         var dataArr = data.split(",");
-        var movieOption = dataArr[1];
-        movieOption = movieOption.split(' ') // set up to match input type, needs to enter as an array.
-        //console.log(movieOption);
+        var movieOption = dataArr[1]; //give two empty indexes to match Input array logic
+        movieOption = movieOption.split(' ');
+        var temp = movieOption.splice(0, 0, '', '', dataArr[0]) // set up to match input type, logic skips index 0 and 1 so make them empty here.
         runCase(dataArr[0], dataArr[1], movieOption);
     });
 }
+
+function log(text) {
+    fs.appendFile('log.txt', text + '\r\n', function(err) { //prettify text file with new lines, append lines.
+        if (err) {
+            console.log(err);
+        }
+    })
+    console.log(text); // console log whatever used to be console logged before.
+}
+//log('testing'); works

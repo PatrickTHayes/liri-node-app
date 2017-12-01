@@ -9,7 +9,7 @@ to get last 20 tweets from KdurantAlias: node liri.js my-tweets
             you will still have to overwrite with your own in the tweet function (line 84-87)
 
 to get movie information: node liri.js movie-this <your> <movie> <title> <here>
-    (seperated by spaces)
+    (seperated by spaces)//(or in quotes) new updated logic accepts both
     no movie title will invoke a search for Mr. Nobody
      ```
        * Title of the movie.
